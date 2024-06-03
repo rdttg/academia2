@@ -1,21 +1,18 @@
 <?php
 session_start();
 
-// Verificar se o usuário está logado e é um administrador
-
-
 include "conexao.php"; // Incluir arquivo de conexão se necessário
 
 // Verificar se o formulário de adicionar treino foi submetido
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['user_id']) && isset($_POST['nome_treino']) && isset($_POST['descricao_treino'])) {
-        $user_id = $_POST['user_id'];
+    if (isset($_POST['username']) && isset($_POST['nome_treino']) && isset($_POST['descricao_treino'])) {
+        $username = $_POST['username'];
         $nome_treino = $_POST['nome_treino'];
         $descricao_treino = $_POST['descricao_treino'];
 
         // Preparar e executar a consulta para inserir o treino
-        $stmt = $conn->prepare("INSERT INTO treinos (id, nome, descricao) VALUES (?, ?, ?)");
-        $stmt->bind_param("iss", $user_id, $nome_treino, $descricao_treino);
+        $stmt = $conn->prepare("INSERT INTO treinos (username, nome, descricao) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $username, $nome_treino, $descricao_treino);
 
         if ($stmt->execute()) {
             echo "Treino adicionado com sucesso!";
@@ -81,7 +78,7 @@ if (isset($_GET['user_id'])) {
     $user_name = '';
 
     // Consulta para obter o nome do usuário
-    $sql = "SELECT nome FROM usuarios WHERE id = ?";
+    $sql = "SELECT username FROM usuarios WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $user_id);
     $stmt->execute();
@@ -89,7 +86,7 @@ if (isset($_GET['user_id'])) {
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $user_name = $row['nome'];
+        $user_name = $row['username'];
     }
 ?>
 <!DOCTYPE html>
@@ -105,7 +102,7 @@ if (isset($_GET['user_id'])) {
 
     <h2>Adicionar Treino para <?php echo $user_name; ?></h2>
     <form method="post" action="">
-        <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
+        <input type="hidden" name="username" value="<?php echo $user_name; ?>">
         <label for="nome_treino">Nome do Treino:</label>
         <input type="text" id="nome_treino" name="nome_treino" required>
         <label for="descricao_treino">Descrição do Treino:</label>
@@ -119,9 +116,9 @@ if (isset($_GET['user_id'])) {
         <select id="delete_treino" name="delete_treino">
         <?php
         // Consulta para obter treinos do usuário selecionado
-        $sql = "SELECT id, nome FROM treinos WHERE user_id = ?";
+        $sql = "SELECT id, nome FROM treinos WHERE username = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param('i', $user_id);
+        $stmt->bind_param('s', $user_name);
         $stmt->execute();
         $result = $stmt->get_result();
 
