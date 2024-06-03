@@ -81,7 +81,7 @@ if (isset($_GET['user_id'])) {
     $user_name = '';
 
     // Consulta para obter o nome do usuário
-    $sql = "SELECT nome FROM usuarios WHERE id = ?";
+    $sql = "SELECT username FROM usuarios WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('i', $user_id);
     $stmt->execute();
@@ -89,7 +89,7 @@ if (isset($_GET['user_id'])) {
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        $user_name = $row['nome'];
+        $user_name = $row['username'];
     }
 ?>
 <!DOCTYPE html>
