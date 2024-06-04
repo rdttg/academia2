@@ -1,4 +1,4 @@
-
+<a href="HOME.php" class="btn btn-outline-primary btn-back">Voltar para HOME</a>
 <?php
 session_start();
 
