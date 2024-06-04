@@ -1,64 +1,9 @@
-<?php
-// inclui o arquivo de conexão com o banco de dados
-include 'conexao.php';
-
-// Inicia a sessão
-session_start();
-
-// Verifica se o usuário está logado
-if (!isset($_SESSION['user_username'])) {
-    // Redireciona para a página de login se não estiver logado
-    header("Location: login.html");
-    exit();
-}
-
-// Recebe os dados do formulário de treino, se existirem
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $nome = $_POST['nome'];
-    $descricao = $_POST['descricao'];
-    $username = $_SESSION['user_username'];
-
-    // Prepara e executa a query para inserir o treino
-    $stmt = $conn->prepare("INSERT INTO treinos (username, nome, descricao) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $nome, $descricao);
-
-    if ($stmt->execute()) {
-        echo "Treino salvo com sucesso!";
-    } else {
-        echo "Erro ao salvar o treino: " . $stmt->error;
-    }
-
-    $stmt->close();
-}
-
-// Prepara e executa a query para buscar os treinos do usuário logado
-$stmt = $conn->prepare("SELECT id, nome, descricao FROM treinos WHERE username = ?");
-if ($stmt === false) {
-    die('Erro na preparação da consulta: ' . $conn->error);
-}
-
-$bind_result = $stmt->bind_param("s", $_SESSION['user_username']);
-if ($bind_result === false) {
-    die('Erro ao vincular parâmetros: ' . $stmt->error);
-}
-
-$execute_result = $stmt->execute();
-if ($execute_result === false) {
-    die('Erro ao executar a consulta: ' . $stmt->error);
-}
-
-$result = $stmt->get_result();
-if ($result === false) {
-    die('Erro ao obter o resultado: ' . $stmt->error);
-}
-
-?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Treinos - TadalaFit</title>
+    <title>Home - TadalaFit</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -124,7 +69,7 @@ if ($result === false) {
             background-color: #34495e;
         }
 
-        .form-section, .table-section {
+        .section-promotions, .section-gallery, .section-testimonials, .section-schedule {
             margin-top: 30px;
             padding: 20px;
             background-color: #fff;
@@ -138,62 +83,9 @@ if ($result === false) {
             margin-top: 0;
         }
 
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        input, select {
-            margin-bottom: 15px;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #2c3e50;
-            color: #ecf0f1;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #34495e;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 12px;
-            border: 1px solid #ccc;
-            text-align: left;
-        }
-
-        th {
-            background-color: #2c3e50;
-            color: #ecf0f1;
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .actions button {
-            padding: 5px 10px;
+        p {
+            line-height: 1.6;
+            color: #7f8c8d;
         }
 
         footer {
@@ -209,6 +101,14 @@ if ($result === false) {
             color: #e74c3c;
             font-weight: bold;
         }
+
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            }
+           
     </style>
 </head>
 <body>
@@ -218,11 +118,16 @@ if ($result === false) {
 
             <nav>
                 <ul class="navbar">
+            
                     <li><a href="HOME.php" class="nav-link">Início</a></li>
                     <li><a href="treinos.php" class="nav-link">Treinos</a></li>
+                 <li><a href="admin.php" class="nav-link">ADMIN </a></li>
+                           
+                  
                     <li><a href="planos.php" class="nav-link">Planos</a></li>
                     <li><a href="sobre.php" class="nav-link">Sobre</a></li>
                     <?php
+                    session_start();
                     if(isset($_SESSION['user_username'])) {
                         echo '<li>Bem-vindo(a), <span class="highlight">'  . $_SESSION['user_username'] . '</span></li>';
                         echo '<li><a href="logout.php" style="background-color: #e74c3c;">Sair</a></li>';
@@ -234,7 +139,99 @@ if ($result === false) {
                 </ul>
             </nav>
         </header>
+<?php
+// inclui o arquivo de conexão com o banco de dados
+include 'conexao.php';
 
+// Inicia a sessão
+
+// Verifica se o usuário está logado
+if (!isset($_SESSION['user_username'])) {
+    // Redireciona para a página de login se não estiver logado
+    header("Location: login.html");
+    exit();
+}
+
+// Recebe os dados do formulário de treino, se existirem
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if (isset($_POST['nome']) && isset($_POST['descricao'])) {
+        $nome = $_POST['nome'];
+        $descricao = $_POST['descricao'];
+        $username = $_SESSION['user_username'];
+
+        // Prepara e executa a query para inserir o treino
+        $stmt = $conn->prepare("INSERT INTO treinos (username, nome, descricao) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $username, $nome, $descricao);
+
+        if ($stmt->execute()) {
+            echo "Treino salvo com sucesso!";
+        } else {
+            echo "Erro ao salvar o treino: " . $stmt->error;
+        }
+
+        $stmt->close();
+    } elseif (isset($_POST['exercicio_nome']) && isset($_POST['exercicio_descricao']) && isset($_POST['treino_id'])) {
+        // Recebe os dados do formulário de exercício
+        $exercicio_nome = $_POST['exercicio_nome'];
+        $exercicio_descricao = $_POST['exercicio_descricao'];
+        $treino_id = $_POST['treino_id'];
+
+        // Prepara e executa a query para inserir o exercício
+        $stmt = $conn->prepare("INSERT INTO exercicios (treino_id, nome, descricao) VALUES (?, ?, ?)");
+        $stmt->bind_param("iss", $treino_id, $exercicio_nome, $exercicio_descricao);
+
+        if ($stmt->execute()) {
+            echo "Exercício salvo com sucesso!";
+        } else {
+            echo "Erro ao salvar o exercício: " . $stmt->error;
+        }
+
+        $stmt->close();
+    }
+}
+
+// Prepara e executa a query para buscar os treinos do usuário logado
+$stmt = $conn->prepare("SELECT id, nome, descricao FROM treinos WHERE username = ?");
+if ($stmt === false) {
+    die('Erro na preparação da consulta: ' . $conn->error);
+}
+
+$bind_result = $stmt->bind_param("s", $_SESSION['user_username']);
+if ($bind_result === false) {
+    die('Erro ao vincular parâmetros: ' . $stmt->error);
+}
+
+$execute_result = $stmt->execute();
+if ($execute_result === false) {
+    die('Erro ao executar a consulta: ' . $stmt->error);
+}
+
+$result = $stmt->get_result();
+if ($result === false) {
+    die('Erro ao obter o resultado: ' . $stmt->error);
+}
+?>
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treinos - TadalaFit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* (Aqui vai o seu CSS existente) */
+    </style>
+</head>
+<body>
+    <div class="container">
+           
+            <nav>
+                <ul class="navbar">
+                    <!-- (Aqui vai o seu código existente de navegação) -->
+                </ul>
+            </nav>
+        
         <section class="form-section">
             <h2>Gerenciar Treinos</h2>
             <form id="treinoForm" method="POST" action="treinos.php">
@@ -249,7 +246,9 @@ if ($result === false) {
         </section>
 
         <section class="table-section">
+
             <h2>Meus Treinos</h2>
+                
             <?php
             if ($result->num_rows > 0) {
                 echo "<table>";
@@ -260,10 +259,7 @@ if ($result === false) {
                     echo "<td>" . htmlspecialchars($row['nome']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['descricao']) . "</td>";
                     echo "<td class='actions'>";
-               
-                    echo "<input type='hidden' name='id' value='" . $row['id'] . "'>";
-             
-                    echo "</form>";
+                    echo "<a href='treinos.php?treino_id=" . $row['id'] . "'>Ver Exercícios</a>";
                     echo "<form method='POST' action='excluir_treino.php' style='display:inline-block;'>";
                     echo "<input type='hidden' name='id' value='" . $row['id'] . "'>";
                     echo "<button type='submit'>Excluir</button>";
@@ -275,11 +271,62 @@ if ($result === false) {
             } else {
                 echo "Nenhum treino encontrado.";
             }
-
-            $stmt->close();
-            $conn->close();
             ?>
         </section>
+
+        <?php
+        if (isset($_GET['treino_id'])) {
+            $treino_id = $_GET['treino_id'];
+
+            // Consulta para buscar os exercícios do treino selecionado
+            $stmt = $conn->prepare("SELECT id, nome, descricao FROM exercicios WHERE treino_id = ?");
+            $stmt->bind_param("i", $treino_id);
+            $stmt->execute();
+            $exercicios_result = $stmt->get_result();
+
+            echo "<section class='form-section'>";
+            echo "<h2>Exercícios do Treino</h2>";
+            if ($exercicios_result->num_rows > 0) {
+                echo "<table>";
+                echo "<thead><tr><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>";
+                echo "<tbody>";
+                while ($exercicio = $exercicios_result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($exercicio['nome']) . "</td>";
+                    echo "<td>" . htmlspecialchars($exercicio['descricao']) . "</td>";
+                    echo "<td class='actions'>";
+                    echo "<form method='POST' action='excluir_exercicio.php' style='display:inline-block;'>";
+                    echo "<input type='hidden' name='id' value='" . $exercicio['id'] . "'>";
+                    echo "<button type='submit'>Excluir</button>";
+                    echo "</form>";
+                    echo "</td>";
+                    echo "</tr>";
+                }
+                echo "</tbody></table>";
+            } else {
+                echo "Nenhum exercício encontrado.";
+            }
+
+            // Formulário para adicionar exercício ao treino
+            echo "<h2>Adicionar Exercício</h2>";
+            echo "<form method='POST' action='treinos.php'>";
+            echo "<input type='hidden' name='treino_id' value='" . $treino_id . "'>";
+            echo "<label for='exercicio_nome'>Nome do Exercício:</label>";
+            echo "<input type='text' id='exercicio_nome' name='exercicio_nome' required>";
+            echo "<label for='exercicio_descricao'>Descrição:</label>";
+            echo "<input type='text' id='exercicio_descricao' name='exercicio_descricao' required>";
+            echo "<label for='repeticoes'>Repetições:</label>";
+            echo "<input type='number' id='repeticoes' name='repeticoes' required>";
+            echo "<button type='button' onclick='addExerciseField()'>Adicionar Exercício</button>";
+            echo "</div>";
+            echo "<button type='submit'>Salvar Exercícios</button>";
+            echo "</form>";
+            echo "</section>";
+        }
+
+        $stmt->close();
+        $conn->close();
+        ?>
     </div>
 
     <footer>
