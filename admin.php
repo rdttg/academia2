@@ -1,11 +1,11 @@
 <a href="HOME.php" class="btn btn-outline-primary btn-back">Voltar para HOME</a>
 <?php
 session_start();
-
 include "conexao.php"; // Incluir arquivo de conexão se necessário
 
-// Verificar se o formulário de adicionar treino foi submetido
+// Verificar se o formulário foi submetido
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Adicionar treino
     if (isset($_POST['username']) && isset($_POST['nome_treino']) && isset($_POST['descricao_treino'])) {
         $username = $_POST['username'];
         $nome_treino = $_POST['nome_treino'];
@@ -23,10 +23,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt->close();
     }
-}
+    // Adicionar exercício
+    if (isset($_POST['exercicio_nome']) && isset($_POST['exercicio_descricao']) && isset($_POST['treino_id'])) {
+        $exercicio_nome = $_POST['exercicio_nome'];
+        $exercicio_descricao = $_POST['exercicio_descricao'];
+        $treino_id = $_POST['treino_id'];
 
-// Verificar se o formulário de remover treino foi submetido
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Preparar e executar a consulta para inserir o exercício
+        $stmt = $conn->prepare("INSERT INTO exercicios (treino_id, nome, descricao) VALUES (?, ?, ?)");
+        $stmt->bind_param("iss", $treino_id, $exercicio_nome, $exercicio_descricao);
+
+        if ($stmt->execute()) {
+            echo "Exercício salvo com sucesso!";
+        } else {
+            echo "Erro ao salvar o exercício: " . $stmt->error;
+        }
+
+        $stmt->close();
+    }
+    // Remover treino
     if (isset($_POST['delete_treino'])) {
         $treino_id = $_POST['delete_treino'];
 
@@ -42,10 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt->close();
     }
-}
-
-// Verificar se o formulário de pesquisa foi submetido
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Pesquisar usuário
     if (isset($_POST['search_user'])) {
         $search_term = $_POST['search_user'];
 
@@ -73,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Se um usuário específico foi selecionado, mostrar formulário para adicionar treino
+// Se um usuário específico foi selecionado, mostrar formulário para adicionar treino e exercícios
 if (isset($_GET['user_id'])) {
     $user_id = $_GET['user_id'];
     $user_name = '';
@@ -109,6 +121,34 @@ if (isset($_GET['user_id'])) {
         <label for="descricao_treino">Descrição do Treino:</label>
         <input type="text" id="descricao_treino" name="descricao_treino" required>
         <button type="submit">Adicionar Treino</button>
+    </form>
+
+    <h2>Adicionar Exercício</h2>
+    <form method="post" action="">
+        <label for="treino_id">Treino:</label>
+        <select id="treino_id" name="treino_id">
+        <?php
+        // Consulta para obter treinos do usuário selecionado
+        $sql = "SELECT id, nome FROM treinos WHERE username = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('s', $user_name);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<option value='{$row['id']}'>{$row['nome']}</option>";
+            }
+        } else {
+            echo "<option disabled selected>Nenhum treino encontrado</option>";
+        }
+        ?>
+        </select>
+        <label for="exercicio_nome">Nome do Exercício:</label>
+        <input type="text" id="exercicio_nome" name="exercicio_nome" required>
+        <label for="exercicio_descricao">Descrição do Exercício:</label>
+        <input type="text" id="exercicio_descricao" name="exercicio_descricao" required>
+        <button type="submit">Adicionar Exercício</button>
     </form>
 
     <h2>Remover Treino</h2>
@@ -170,3 +210,4 @@ if (isset($_GET['user_id'])) {
 }
 $conn->close();
 ?>
+
