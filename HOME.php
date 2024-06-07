@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - TadalaFit</title>
+    <title>Home - FlexFit Gym</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -114,7 +114,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>TadalaFit</h1>
+            <h1>FlexFit Gym</h1>
 
             <nav>
                 <ul class="navbar">
@@ -157,7 +157,7 @@
 
         <section class="section-testimonials">
             <h2>Depoimentos</h2>
-            <p>"A TadalaFit transformou minha vida! Com os programas personalizados e a orientação dos instrutores, alcancei todos os meus objetivos de fitness." - João Silva</p>
+            <p>"A FlexFit Gym transformou minha vida! Com os programas personalizados e a orientação dos instrutores, alcancei todos os meus objetivos de fitness." - João Silva</p>
             <p>"A melhor academia da cidade, com certeza! Equipamentos modernos e uma equipe muito atenciosa." - Maria Souza</p>
         </section>
 
@@ -177,7 +177,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 TadalaFit. Todos os direitos reservados.</p>
+        <p>&copy; 2024 FlexFit Gym. Todos os direitos reservados.</p>
     </footer>
 </body>
 </html>

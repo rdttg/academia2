@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Planos - TadalaFit</title>
+    <title>Planos - FlexFit Gym</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -146,7 +146,7 @@
 <body>
     <div class="container">
         <header>
-            <h1>TadalaFit</h1>
+            <h1>FlexFit Gym</h1>
 
             <nav>
                 <ul class="navbar">
@@ -218,7 +218,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2024 TadalaFit. Todos os direitos reservados.</p>
+        <p>&copy; 2024 FlexFit Gym. Todos os direitos reservados.</p>
     </footer>
 </body>
 </html>
