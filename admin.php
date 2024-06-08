@@ -3,6 +3,12 @@
 session_start();
 include "conexao.php"; // Incluir arquivo de conexão se necessário
 
+
+if (!isset($_SESSION['user_username'])) {
+    header("Location: login.html");
+    exit();
+}
+
 // Verificar se o formulário foi submetido
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Adicionar treino

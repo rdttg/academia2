@@ -159,34 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $descricao = $_POST['descricao'];
         $username = $_SESSION['user_username'];
 
-        // Prepara e executa a query para inserir o treino
-        $stmt = $conn->prepare("INSERT INTO treinos (username, nome, descricao) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $username, $nome, $descricao);
 
-        if ($stmt->execute()) {
-            echo "Treino salvo com sucesso!";
-        } else {
-            echo "Erro ao salvar o treino: " . $stmt->error;
-        }
-
-        $stmt->close();
-    } elseif (isset($_POST['exercicio_nome']) && isset($_POST['exercicio_descricao']) && isset($_POST['treino_id'])) {
-        // Recebe os dados do formulário de exercício
-        $exercicio_nome = $_POST['exercicio_nome'];
-        $exercicio_descricao = $_POST['exercicio_descricao'];
-        $treino_id = $_POST['treino_id'];
-
-        // Prepara e executa a query para inserir o exercício
-        $stmt = $conn->prepare("INSERT INTO exercicios (treino_id, nome, descricao) VALUES (?, ?, ?)");
-        $stmt->bind_param("iss", $treino_id, $exercicio_nome, $exercicio_descricao);
-
-        if ($stmt->execute()) {
-            echo "Exercício salvo com sucesso!";
-        } else {
-            echo "Erro ao salvar o exercício: " . $stmt->error;
-        }
-
-        $stmt->close();
     }
 }
 
@@ -232,19 +205,7 @@ if ($result === false) {
                 </ul>
             </nav>
         
-        <section class="form-section">
-            <h2>Gerenciar Treinos</h2>
-            <form id="treinoForm" method="POST" action="treinos.php">
-                <label for="nome">Nome do Treino:</label>
-                <input type="text" id="nome" name="nome" required>
-
-                <label for="descricao">Descrição:</label>
-                <input type="text" id="descricao" name="descricao" required>
-
-                <button type="submit">Salvar</button>
-            </form>
-        </section>
-
+        
         <section class="table-section">
 
             <h2>Meus Treinos</h2>
@@ -308,20 +269,20 @@ if ($result === false) {
             }
 
             // Formulário para adicionar exercício ao treino
-            echo "<h2>Adicionar Exercício</h2>";
-            echo "<form method='POST' action='treinos.php'>";
-            echo "<input type='hidden' name='treino_id' value='" . $treino_id . "'>";
-            echo "<label for='exercicio_nome'>Nome do Exercício:</label>";
-            echo "<input type='text' id='exercicio_nome' name='exercicio_nome' required>";
-            echo "<label for='exercicio_descricao'>Descrição:</label>";
-            echo "<input type='text' id='exercicio_descricao' name='exercicio_descricao' required>";
-            echo "<label for='repeticoes'>Repetições:</label>";
-            echo "<input type='number' id='repeticoes' name='repeticoes' required>";
-            echo "<button type='button' onclick='addExerciseField()'>Adicionar Exercício</button>";
-            echo "</div>";
-            echo "<button type='submit'>Salvar Exercícios</button>";
-            echo "</form>";
-            echo "</section>";
+           // echo "<h2>Adicionar Exercício</h2>";
+           // echo "<form method='POST' action='treinos.php'>";
+          //  echo "<input type='hidden' name='treino_id' value='" . $treino_id . "'>";
+          //  echo "<label for='exercicio_nome'>Nome do Exercício:</label>";
+          //  echo "<input type='text' id='exercicio_nome' name='exercicio_nome' required>";
+          //  echo "<label for='exercicio_descricao'>Descrição:</label>";
+          //  echo "<input type='text' id='exercicio_descricao' name='exercicio_descricao' required>";
+          //  echo "<label for='repeticoes'>Repetições:</label>";
+          //  echo "<input type='number' id='repeticoes' name='repeticoes' required>";
+          //  echo "<button type='button' onclick='addExerciseField()'>Adicionar Exercício</button>";
+          //  echo "</div>";
+            //echo "<button type='submit'>Salvar Exercícios</button>";
+           // echo "</form>";
+           // echo "</section>";
         }
 
         $stmt->close();
