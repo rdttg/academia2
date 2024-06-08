@@ -146,14 +146,7 @@
             <p>Promoção válida até o final do mês. Não perca!</p>
         </section>
 
-        <section class="section-gallery">
-            <h2>Galeria de Fotos</h2>
-            <div class="gallery">
-                <img src="image1.jpg" alt="Foto da Academia">
-                <img src="image2.jpg" alt="Aulas em Grupo">
-                <img src="image3.jpg" alt="Equipamentos Modernos">
-            </div>
-        </section>
+       
 
         <section class="section-testimonials">
             <h2>Depoimentos</h2>
