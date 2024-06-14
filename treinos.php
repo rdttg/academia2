@@ -1,3 +1,38 @@
+<?php
+session_start();
+
+// Verifica se o usuário está logado
+if (!isset($_SESSION['user_username'])) {
+    // Redireciona para a página de login se não estiver logado
+    header("Location: login.html");
+    exit();
+}
+
+// inclui o arquivo de conexão com o banco de dados
+include 'conexao.php';
+
+// Prepara e executa a query para buscar os treinos do usuário logado
+$stmt = $conn->prepare("SELECT id, nome, descricao FROM treinos WHERE username = ?");
+if ($stmt === false) {
+    die('Erro na preparação da consulta: ' . $conn->error);
+}
+
+$bind_result = $stmt->bind_param("s", $_SESSION['user_username']);
+if ($bind_result === false) {
+    die('Erro ao vincular parâmetros: ' . $stmt->error);
+}
+
+$execute_result = $stmt->execute();
+if ($execute_result === false) {
+    die('Erro ao executar a consulta: ' . $stmt->error);
+}
+
+$result = $stmt->get_result();
+if ($result === false) {
+    die('Erro ao obter o resultado: ' . $stmt->error);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -125,7 +160,6 @@
     <div class="container">
         <header>
             <h1>FlexFit Gym</h1>
-
             <nav>
                 <ul class="navbar">
                     <li><a href="HOME.php" class="nav-link">Início</a></li>
@@ -134,7 +168,6 @@
                     <li><a href="planos.php" class="nav-link">Planos</a></li>
                     <li><a href="sobre.php" class="nav-link">Sobre</a></li>
                     <?php
-                    session_start();
                     if(isset($_SESSION['user_username'])) {
                         echo '<li>Bem-vindo(a), <span class="highlight">'  . $_SESSION['user_username'] . '</span></li>';
                         echo '<li><a href="logout.php" style="background-color: #e74c3c;">Sair</a></li>';
@@ -149,39 +182,8 @@
 
         <section class="table-section">
             <h2>Meus Treinos</h2>
-                
+
             <?php
-            // inclui o arquivo de conexão com o banco de dados
-            include 'conexao.php';
-
-            // Verifica se o usuário está logado
-            if (!isset($_SESSION['user_username'])) {
-                // Redireciona para a página de login se não estiver logado
-                header("Location: login.html");
-                exit();
-            }
-
-            // Prepara e executa a query para buscar os treinos do usuário logado
-            $stmt = $conn->prepare("SELECT id, nome, descricao FROM treinos WHERE username = ?");
-            if ($stmt === false) {
-                die('Erro na preparação da consulta: ' . $conn->error);
-            }
-
-            $bind_result = $stmt->bind_param("s", $_SESSION['user_username']);
-            if ($bind_result === false) {
-                die('Erro ao vincular parâmetros: ' . $stmt->error);
-            }
-
-            $execute_result = $stmt->execute();
-            if ($execute_result === false) {
-                die('Erro ao executar a consulta: ' . $stmt->error);
-            }
-
-            $result = $stmt->get_result();
-            if ($result === false) {
-                die('Erro ao obter o resultado: ' . $stmt->error);
-            }
-
             if ($result->num_rows > 0) {
                 echo "<table>";
                 echo "<thead><tr><th>Nome</th><th>Descrição</th><th>Ações</th></tr></thead>";
@@ -201,8 +203,8 @@
             }
 
             $stmt->close();
-            $conn->close();
             ?>
+
         </section>
 
         <?php
@@ -261,11 +263,7 @@
     </div>
 
     <footer>
-        <p>&copy; 202
-        </div>
-
-<footer>
-    <p>&copy; 2024 FlexFit Gym. Todos os direitos reservados.</p>
-</footer>
+        <p>&copy; <?php echo date('Y'); ?> FlexFit Gym. Todos os direitos reservados.</p>
+    </footer>
 </body>
 </html>
