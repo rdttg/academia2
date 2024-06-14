@@ -1,4 +1,3 @@
-<a href="HOME.php" class="btn btn-outline-primary btn-back">Voltar para HOME</a>
 <?php
 session_start();
 include "conexao.php"; 
@@ -21,9 +20,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sss", $username, $nome_treino, $descricao_treino);
 
         if ($stmt->execute()) {
-            echo "Treino adicionado com sucesso!";
+            echo "<p class='success'>Treino adicionado com sucesso!</p>";
         } else {
-            echo "Erro ao adicionar o treino: " . $stmt->error;
+            echo "<p class='error'>Erro ao adicionar o treino: " . $stmt->error . "</p>";
         }
 
         $stmt->close();
@@ -40,9 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("iss", $treino_id, $exercicio_nome, $exercicio_descricao);
 
         if ($stmt->execute()) {
-            echo "Exercício salvo com sucesso!";
+            echo "<p class='success'>Exercício salvo com sucesso!</p>";
         } else {
-            echo "Erro ao salvar o exercício: " . $stmt->error;
+            echo "<p class='error'>Erro ao salvar o exercício: " . $stmt->error . "</p>";
         }
 
         $stmt->close();
@@ -57,9 +56,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("i", $treino_id);
 
         if ($stmt->execute()) {
-            echo "Treino removido com sucesso!";
+            echo "<p class='success'>Treino removido com sucesso!</p>";
         } else {
-            echo "Erro ao remover o treino: " . $stmt->error;
+            echo "<p class='error'>Erro ao remover o treino: " . $stmt->error . "</p>";
+        }
+
+        $stmt->close();
+    }
+
+    // Editar treino
+    if (isset($_POST['edit_treino_id']) && isset($_POST['edit_nome_treino']) && isset($_POST['edit_descricao_treino'])) {
+        $treino_id = $_POST['edit_treino_id'];
+        $novo_nome_treino = $_POST['edit_nome_treino'];
+        $nova_descricao_treino = $_POST['edit_descricao_treino'];
+
+        // Prepara a consulta para editar o treino
+        $stmt = $conn->prepare("UPDATE treinos SET nome = ?, descricao = ? WHERE id = ?");
+        $stmt->bind_param("ssi", $novo_nome_treino, $nova_descricao_treino, $treino_id);
+
+        if ($stmt->execute()) {
+            echo "<p class='success'>Treino editado com sucesso!</p>";
+        } else {
+            echo "<p class='error'>Erro ao editar o treino: " . $stmt->error . "</p>";
+        }
+
+        $stmt->close();
+    }
+
+    // Editar exercício
+    if (isset($_POST['edit_exercicio_id']) && isset($_POST['edit_exercicio_nome']) && isset($_POST['edit_exercicio_descricao'])) {
+        $exercicio_id = $_POST['edit_exercicio_id'];
+        $novo_nome_exercicio = $_POST['edit_exercicio_nome'];
+        $nova_descricao_exercicio = $_POST['edit_exercicio_descricao'];
+
+        // Prepara a consulta para editar o exercício
+        $stmt = $conn->prepare("UPDATE exercicios SET nome = ?, descricao = ? WHERE id = ?");
+        $stmt->bind_param("ssi", $novo_nome_exercicio, $nova_descricao_exercicio, $exercicio_id);
+
+        if ($stmt->execute()) {
+            echo "<p class='success'>Exercício editado com sucesso!</p>";
+        } else {
+            echo "<p class='error'>Erro ao editar o exercício: " . $stmt->error . "</p>";
         }
 
         $stmt->close();
@@ -116,9 +153,83 @@ if (isset($_GET['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administração de Treinos</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Estilos CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .btn-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #007bff;
+            padding: 10px 15px;
+            border-radius: 4px;
+        }
+        .btn-back:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        ul li a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        ul li a:hover {
+            text-decoration: underline;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
+    <a href="HOME.php" class="btn-back">Voltar para HOME</a>
     <h1>Administração de Treinos</h1>
 
     <h2>Adicionar Treino para <?php echo $user_name; ?></h2>
@@ -183,6 +294,65 @@ if (isset($_GET['user_id'])) {
         <button type="submit">Remover Treino</button>
     </form>
 
+    <h2>Editar Treino</h2>
+    <form method="post" action="">
+        <label for="edit_treino_id">Selecione o treino a ser editado:</label>
+        <select id="edit_treino_id" name="edit_treino_id">
+        <?php
+        // Consulta para obter treinos do usuário selecionado
+        $sql = "SELECT id, nome FROM treinos WHERE username = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('s', $user_name);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<option value='{$row['id']}'>{$row['nome']}</option>";
+            }
+        } else {
+            echo "<option disabled selected>Nenhum treino encontrado</option>";
+        }
+        ?>
+        </select>
+        <label for="edit_nome_treino">Novo Nome do Treino:</label>
+        <input type="text" id="edit_nome_treino" name="edit_nome_treino" required>
+        <label for="edit_descricao_treino">Nova Descrição do Treino:</label>
+        <input type="text" id="edit_descricao_treino" name="edit_descricao_treino" required>
+        <button type="submit">Editar Treino</button>
+    </form>
+
+    <h2>Editar Exercício</h2>
+    <form method="post" action="">
+        <label for="edit_exercicio_id">Selecione o exercício a ser editado:</label>
+        <select id="edit_exercicio_id" name="edit_exercicio_id">
+        <?php
+        // Consulta para obter exercícios do usuário selecionado
+        $sql = "SELECT e.id, e.nome 
+                FROM exercicios e 
+                JOIN treinos t ON e.treino_id = t.id 
+                WHERE t.username = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param('s', $user_name);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                echo "<option value='{$row['id']}'>{$row['nome']}</option>";
+            }
+        } else {
+            echo "<option disabled selected>Nenhum exercício encontrado</option>";
+        }
+        ?>
+        </select>
+        <label for="edit_exercicio_nome">Novo Nome do Exercício:</label>
+        <input type="text" id="edit_exercicio_nome" name="edit_exercicio_nome" required>
+        <label for="edit_exercicio_descricao">Nova Descrição do Exercício:</label>
+        <input type="text" id="edit_exercicio_descricao" name="edit_exercicio_descricao" required>
+        <button type="submit">Editar Exercício</button>
+    </form>
+
     <h2>Treinos e Exercícios de <?php echo $user_name; ?></h2>
     <?php
     // Consulta para obter todos os treinos do usuário
@@ -198,7 +368,7 @@ if (isset($_GET['user_id'])) {
             echo "<p>Descrição: " . $treino['descricao'] . "</p>";
 
             // Consulta para obter exercícios do treino
-            $sql_exercicios = "SELECT nome, descricao FROM exercicios WHERE treino_id = ?";
+            $sql_exercicios = "SELECT id, nome, descricao FROM exercicios WHERE treino_id = ?";
             $stmt_exercicios = $conn->prepare($sql_exercicios);
             $stmt_exercicios->bind_param('i', $treino['id']);
             $stmt_exercicios->execute();
@@ -232,22 +402,96 @@ if (isset($_GET['user_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administração de Treinos</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Estilos CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        form {
+            margin-bottom: 20px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .btn-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #007bff;
+            text-decoration: none;
+            border: 1px solid #007bff;
+            padding: 10px 15px;
+            border-radius: 4px;
+        }
+        .btn-back:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            margin-bottom: 10px;
+        }
+        ul li a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        ul li a:hover {
+            text-decoration: underline;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
+    <a href="HOME.php" class="btn-back">Voltar para HOME</a>
     <h1>Administração de Treinos</h1>
 
     <h2>Pesquisar Usuário</h2>
     <form method="post" action="">
-        <label for="search_user">Digite o nome do usuário:</label>
-        <input type="text" id="search_user" name="search_user" required>
+        <label for="search_user">Nome de Usuário:</label>
+        <input type="text" id="search_user" name="search_user">
         <button type="submit">Pesquisar</button>
     </form>
 
-    <h2>Lista de Usuários</h2>
+    <h2>Todos os Usuários</h2>
     <ul>
     <?php
-    // Consulta para listar todos os usuários cadastrados
+    // Consulta para obter todos os usuários
     $sql = "SELECT id, username FROM usuarios";
     $result = $conn->query($sql);
 
@@ -256,7 +500,7 @@ if (isset($_GET['user_id'])) {
             echo "<li><a href='admin.php?user_id=" . $row['id'] . "'>" . $row['username'] . "</a></li>";
         }
     } else {
-        echo "<p>Nenhum usuário cadastrado.</p>";
+        echo "<li>Nenhum usuário encontrado</li>";
     }
     ?>
     </ul>

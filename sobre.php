@@ -112,6 +112,7 @@
                 <ul class="navbar">
                     <li><a href="HOME.php" class="nav-link">Início</a></li>
                     <li><a href="treinos.php" class="nav-link">Treinos</a></li>
+                    <li><a href="admin.php" class="nav-link">Personal</a></li> 
                     <li><a href="planos.php" class="nav-link">Planos</a></li>
                     <li><a href="sobre.php" class="nav-link">Sobre</a></li>
                     <?php
@@ -132,7 +133,7 @@
 
     <section class="section-about">
             <h2>Sobre Nós</h2>        
-            <p>Bem-vindo à FlexFit Gym, sua academia de referência para alcançar seus objetivos de fitness e saúde. Nós nos dedicamos a oferecer programas de treinamento personalizados, equipamentos de última geração e uma comunidade de apoio para ajudá-lo a atingir seu potencial máximo.</p>
+            <p>Seja bem-vindo à FlexFit Gym, onde você encontra tudo que precisa para alcançar suas metas de saúde e condicionamento físico. Oferecemos programas de treinamento personalizados, equipamentos de última geração e uma comunidade de apoio para ajudá-lo a atingir seu melhor desempenho.</p>
            
 
         </section>

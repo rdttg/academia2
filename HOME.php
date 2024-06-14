@@ -121,7 +121,9 @@
             
                     <li><a href="HOME.php" class="nav-link">Início</a></li>
                     <li><a href="treinos.php" class="nav-link">Treinos</a></li>
-                 <li><a href="admin.php" class="nav-link">ADMIN </a></li>
+                 <li><a href="admin.php" class="nav-link">Personal </a></li>
+
+
                            
                   
                     <li><a href="planos.php" class="nav-link">Planos</a></li>
@@ -146,14 +148,7 @@
             <p>Promoção válida até o final do mês. Não perca!</p>
         </section>
 
-       
-
-        <section class="section-testimonials">
-            <h2>Depoimentos</h2>
-            <p>"A FlexFit Gym transformou minha vida! Com os programas personalizados e a orientação dos instrutores, alcancei todos os meus objetivos de fitness." - João Silva</p>
-            <p>"A melhor academia da cidade, com certeza! Equipamentos modernos e uma equipe muito atenciosa." - Maria Souza</p>
-        </section>
-
+    
         <section class="section-schedule">
             <h2>Horários de Aulas</h2>
             <p>Segunda a Sexta:</p>
@@ -167,6 +162,12 @@
                 <li>Manhã: 7:00 - 12:00</li>
             </ul>
         </section>
+        <section class="section-testimonials">
+            <h2>Depoimentos</h2>
+            <p>"A FlexFit Gym transformou minha vida! Com os programas personalizados e a orientação dos instrutores, alcancei todos os meus objetivos fitness." - João Silva</p>
+            <p>"A melhor academia da cidade, com certeza! Equipamentos modernos e uma equipe muito atenciosa." - Maria Souza</p>
+        </section>
+
     </div>
 
     <footer>

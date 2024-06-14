@@ -150,12 +150,20 @@
 
             <nav>
                 <ul class="navbar">
-                    <li><a href="HOME.php" class="nav-link">Início</a></li>
+                <li><a href="HOME.php" class="nav-link">Início</a></li>
                     <li><a href="treinos.php" class="nav-link">Treinos</a></li>
-                    <li><a href="planos.php" class="nav-link">Planos</a></li>
-                    <li><a href="sobre.php" class="nav-link">Sobre</a></li>
+                    <li><a href="admin.php" class="nav-link">Personal</a></li>
+                    
+                      <li><a href="sobre.php" class="nav-link">Sobre</a></li> 
+
                     <?php
+
+
+
+
                     session_start();
+
+
                     if(isset($_SESSION['user_username'])) {
                         echo '<li>Bem-vindo(a), <span class="highlight">'  . $_SESSION['user_username'] . '</span></li>';
                         echo '<li><a href="logout.php" style="background-color: #e74c3c;">Sair</a></li>';
@@ -178,6 +186,7 @@
                     <ul>
                         <li>Acesso à academia</li>
                         <li>Consulta com nutricionista</li>
+                        <li>Acesso a personal</li>  
                     </ul>
                     <p>Preço: R$ 150,00/mês</p>
                 </div>
@@ -192,6 +201,7 @@
                         <li>Acesso à academia</li>
                         <li>Consulta com nutricionista</li>
                         <li>Aulas em grupo</li>
+                        <li>Acesso a personal</li>
                     </ul>
                     <p>Preço: R$ 200,00/mês</p>
                 </div>
