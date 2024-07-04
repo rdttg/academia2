@@ -122,6 +122,7 @@
                     <li><a href="HOME.php" class="nav-link">Início</a></li>
                     <li><a href="treinos.php" class="nav-link">Treinos</a></li>
                  <li><a href="admin.php" class="nav-link">Personal </a></li>
+                 <li><a href="metas.php" class="nav-link">Metas </a></li>
 
 
                            
